@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: campusvoice-api
+    runtime: python
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GNANI_API_KEY
+        sync: false
+      - key: PRISMA_MODEL
+        value: prisma-v3.0
+      - key: TIMBRE_MODEL
+        value: timbre-v2.5
+      - key: GNANI_TIMEOUT
+        value: "30.0"
+      - key: FRONTEND_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+    healthCheckPath: /api/health

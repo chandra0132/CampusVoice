@@ -61,6 +61,7 @@ export default function App() {
         answer: result.answer,
         source: result.source,
         category: result.category,
+        is_sample: result.is_sample,
         matched: result.matched,
         audio: result.audio,
         language: result.detected_language || selectedLanguage,
@@ -101,6 +102,7 @@ export default function App() {
         answer: result.answer,
         source: result.source,
         category: result.category,
+        is_sample: result.is_sample,
         matched: result.matched,
         audio: result.audio,
         language: targetLang,
@@ -178,6 +180,7 @@ export default function App() {
               answer={currentInteraction.answer}
               source={currentInteraction.source}
               category={currentInteraction.category}
+              is_sample={currentInteraction.is_sample}
               matched={currentInteraction.matched}
               audio={currentInteraction.audio}
               language={currentInteraction.language}

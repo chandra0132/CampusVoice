@@ -32,21 +32,30 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-origins = [
-    frontend_url,
+# Hardened Production CORS configuration
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173").rstrip("/")
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+
+trusted_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "http://127.0.0.1:5173",
-    "*"
+    "http://localhost:4173",
 ]
+if frontend_url and frontend_url not in trusted_origins:
+    trusted_origins.append(frontend_url)
+if allowed_origins_env:
+    for o in allowed_origins_env.split(","):
+        clean_o = o.strip().rstrip("/")
+        if clean_o and clean_o not in trusted_origins:
+            trusted_origins.append(clean_o)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=trusted_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",  # Safely permits Vercel production and preview URLs
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -244,6 +253,7 @@ async def ask_question(
         "detected_language": detected_language,
         "source": source,
         "category": category,
+        "is_sample": faq_match.get("is_sample", False),
         "matched": matched,
         "audio": audio_base64,
         "has_audio": audio_base64 is not None
@@ -293,6 +303,7 @@ async def query_text(request: TextQueryRequest):
         "detected_language": lang_clean,
         "source": source,
         "category": category,
+        "is_sample": faq_match.get("is_sample", False),
         "matched": matched,
         "audio": audio_base64,
         "has_audio": audio_base64 is not None

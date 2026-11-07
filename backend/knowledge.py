@@ -16,19 +16,22 @@ FALLBACK_MESSAGES = {
 
 # Common conversational stop words across English, Hindi, and Telugu
 STOP_WORDS = {
-    # English
+    # English conversational stop words & universal campus context words
     "what", "is", "the", "a", "an", "in", "on", "at", "to", "for", "of", "and", "or",
     "are", "do", "does", "did", "can", "could", "would", "should", "will", "i", "you",
     "he", "she", "it", "we", "they", "me", "my", "your", "our", "their", "how", "when",
     "where", "why", "who", "which", "there", "this", "that", "these", "those", "have",
     "has", "had", "be", "been", "being", "with", "from", "about", "any", "some", "please",
     "tell", "know", "want", "give", "today", "tomorrow", "yesterday",
-    # Hindi common fillers
+    "campus", "college", "university", "student", "students",
+    # Hindi common fillers & universal context words
     "क्या", "है", "हैं", "के", "की", "का", "में", "पर", "से", "को", "और", "या", "कृपया",
     "मुझे", "बताएं", "बताओ", "चाहिए", "होता", "होती", "होते", "था", "थी", "थे", "लिए",
-    # Telugu common fillers
+    "कॉलेज", "कैंपस", "छात्र", "छात्रों",
+    # Telugu common fillers & universal context words
     "ఏమిటి", "ఏంటి", "ఉంది", "ఉన్నాయి", "లో", "కి", "కు", "మరియు", "లేదా", "దయచేసి",
-    "నాకు", "చెప్పండి", "ఉంటాయి", "ఉంటుంది", "కోసం", "యొక్క", "గురించి"
+    "నాకు", "చెప్పండి", "ఉంటాయి", "ఉంటుంది", "కోసం", "యొక్క", "గురించి",
+    "కాలేజ్", "కాలేజీ", "క్యాంపస్", "విద్యార్థి", "విద్యార్థులు"
 }
 
 def normalize_text(text: str) -> str:
@@ -162,6 +165,7 @@ class KnowledgeBase:
                 "matched": True,
                 "id": best_faq.get("id"),
                 "category": best_faq.get("category"),
+                "is_sample": best_faq.get("is_sample", True),
                 "question": matched_question,
                 "answer": answer_text,
                 "source": best_faq.get("source", "Campus Notice Board"),
@@ -171,6 +175,7 @@ class KnowledgeBase:
         fallback_text, fallback_src = self.get_fallback(lang_key)
         return {
             "matched": False,
+            "is_sample": False,
             "question": query,
             "answer": fallback_text,
             "source": fallback_src,

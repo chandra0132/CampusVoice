@@ -2,7 +2,8 @@
   {
     "id": 1,
     "category": "events",
-    "keywords": ["events", "fest", "techspark", "hackathon", "cultural", "annual day", "college events", "technical fest", "ఈవెంట్స్", "ఉత్సవాలు", "వేడుకలు", "కార్యక్రమాలు", "క్యాంపస్ ఈవెంట్స్", "టెక్ ఫెస్ట్", "హ్యాకథాన్", "कार्यक्रम", "उत्सव", "फेस्ट", "हैकथॉन", "इवेंट्स"],
+    "is_sample": true,
+    "keywords": ["events", "fest", "techspark", "hackathon", "cultural fest", "annual day", "college events", "technical fest", "ఈవెంట్స్", "ఉత్సవాలు", "వేడుకలు", "కార్యక్రమాలు", "క్యాంపస్ ఈవెంట్స్", "టెక్ ఫెస్ట్", "హ్యాకథాన్", "कार्यक्रम", "उत्सव", "फेस्ट", "हैकथॉन", "इवेंट्स"],
     "question": "What events or fests are happening on campus?",
     "question_hi": "कैंपस में कौन से कार्यक्रम या फेस्ट आयोजित हो रहे हैं?",
     "question_te": "క్యాంపస్‌లో ఏవైనా ఈవెంట్స్ లేదా ఉత్సవాలు జరుగుతున్నాయా?",
@@ -16,7 +17,8 @@
   {
     "id": 2,
     "category": "attendance",
-    "keywords": ["attendance", "percentage", "shortage", "condonation", "minimum attendance", "attendance requirement", "rules", "attendance rules", "హాజరు", "పర్సంటేజ్", "అటెండెన్స్", "కండోనేషన్", "నిబంధనలు", "నియమాలు", "హాజరు శాతం", "హాజరు నియమాలు", "హాజరు నిబంధనలు", "उपस्थिति", "अटेंडेंस", "हाजिरी", "नियम", "न्यूनतम उपस्थिति"],
+    "is_sample": true,
+    "keywords": ["attendance", "percentage", "shortage", "condonation", "minimum attendance", "attendance requirement", "attendance rules", "హాజరు", "పర్సంటేజ్", "అటెండెన్స్", "కండోనేషన్", "నిబంధనలు", "నియమాలు", "హాజరు శాతం", "హాజరు నియమాలు", "హాజరు నిబంధనలు", "उपस्थिति", "अटेंडेंस", "हाजिरी", "नियम", "न्यूनतम उपस्थिति"],
     "question": "What is the minimum attendance requirement?",
     "question_hi": "कॉलेज में न्यूनतम उपस्थिति की क्या आवश्यकता है?",
     "question_te": "కాలేజీలో కనీస హాజరు నిబంధన ఏమిటి?",
@@ -30,6 +32,7 @@
   {
     "id": 3,
     "category": "examinations",
+    "is_sample": true,
     "keywords": ["examinations", "exam", "exam rules", "hall ticket", "timetable", "mid terms", "end sem", "exam schedule", "పరీక్షలు", "పరీక్షల", "నియమాలు", "పరీక్షల నియమాలు", "పరీక్షా నియమాలు", "హాల్ టికెట్", "టైంటేబుల్", "ఎగ్జామ్స్", "మిడ్ పరీక్షలు", "షెడ్యూల్", "परीक्षा", "परीक्षा के नियम", "हॉल टिकट", "टाइमटेबल", "एग्जाम", "परीक्षा समय"],
     "question": "When do semester examinations begin and how can I get the hall ticket?",
     "question_hi": "सेमेस्टर परीक्षाएं कब शुरू होती हैं और हॉल टिकट कैसे प्राप्त करें?",
@@ -44,7 +47,8 @@
   {
     "id": 4,
     "category": "placements",
-    "keywords": ["placements", "campus drive", "internship", "placement cell", "cgpa criteria", "highest package", "recruitment", "companies", "ప్లేస్మెంట్స్", "ఉద్యోగాలు", "ఇంటర్న్షిప్", "క్యాంపస్ సెలెక్షన్స్", "కంపెనీలు", "ట్రైనింగ్ సెల్", "సిజిపిఎ", "प्लेसमेंट", "नौकरी", "इंटर्नशिप", "पैकेज", "कंपनियां", "रिक्रूटमेंट"],
+    "is_sample": true,
+    "keywords": ["placements", "placement drive", "recruitment drive", "internship", "placement cell", "cgpa criteria", "highest package", "recruitment", "ప్లేస్మెంట్స్", "ఉద్యోగాలు", "ఇంటర్న్షిప్", "క్యాంపస్ సెలెక్షన్స్", "ప్లేస్‌మెంట్ డ్రైవ్", "ట్రైనింగ్ సెల్", "సిజిపిఎ", "प्लेसमेंट", "नौकरी", "इंटर्नशिप", "पैकेज", "प्लेसमेंट ड्राइव", "रिक्रूटमेंट"],
     "question": "What are the eligibility criteria and procedures for campus placements?",
     "question_hi": "कैंपस प्लेसमेंट के लिए पात्रता मानदंड और प्रक्रियाएं क्या हैं?",
     "question_te": "క్యాంపస్ ప్లేస్‌మెంట్‌ల అర్హత ప్రమాణాలు మరియు విధానాలు ఏమిటి?",
@@ -58,7 +62,8 @@
   {
     "id": 5,
     "category": "academic information",
-    "keywords": ["academics", "syllabus", "credits", "curriculum", "library", "timings", "reading room", "books", "పుస్తకాలు", "సిలబస్", "లైబ్రరీ", "సమయాలు", "క్రెడిట్స్", "కరిక్యులమ్", "చదువు", "पाठ्यक्रम", "लाइब्रेरी", "क्रेडिट्स", "समय", "किताबें", "एकेडेमिक्स"],
+    "is_sample": true,
+    "keywords": ["academics", "syllabus", "credits", "curriculum", "library", "timings", "reading room", "library books", "పుస్తకాలు", "సిలబస్", "లైబ్రరీ", "సమయాలు", "క్రెడిట్స్", "కరిక్యులమ్", "చదువు", "पाठ्यक्रम", "लाइब्रेरी", "क्रेडिट्स", "समय", "किताबें", "एकेडेमिक्स"],
     "question": "What is the academic credit structure and library timings?",
     "question_hi": "एकेडेमिक क्रेडिट संरचना और लाइब्रेरी का समय क्या है?",
     "question_te": "అకడమిక్ క్రెడిట్ నిర్మాణం మరియు లైబ్రరీ సమయాలు ఏమిటి?",
@@ -72,6 +77,7 @@
   {
     "id": 6,
     "category": "departments",
+    "is_sample": true,
     "keywords": ["departments", "cse", "ece", "mechanical", "civil", "faculty", "branches", "specialization", "విభాగాలు", "డిపార్ట్మెంట్స్", "సిఎస్ఈ", "ఈసిఈ", "మెకానికల్", "సివిల్", "శాఖలు", "विभाग", "शाखाएं", "फैकल्टी", "कंप्यूटर साइंस", "मैकेनिकल"],
     "question": "Which academic departments exist on campus?",
     "question_hi": "कैंपस में कौन से शैक्षणिक विभाग उपलब्ध हैं?",
@@ -86,7 +92,8 @@
   {
     "id": 7,
     "category": "student activities",
-    "keywords": ["clubs", "sports", "student activities", "gym", "music", "robotics", "cultural club", "badminton", "ground", "క్లబ్బులు", "క్రీడలు", "వ్యాయామశాల", "సంగీతం", "క్రీడా ప్రాంగణం", "రోబోటిక్స్", "బ్యాడ్మింటన్", "క్లబ్స్", "హ్యాకథాన్ క్లబ్", "क्लब", "खेलकूद", "जिम", "रोबोटिक्स", "संगीत", "नाट्य"],
+    "is_sample": true,
+    "keywords": ["clubs", "sports", "student activities", "gym", "music club", "robotics", "cultural club", "badminton", "sports ground", "క్లబ్బులు", "క్రీడలు", "వ్యాయామశాల", "సంగీతం", "క్రీడా ప్రాంగణం", "రోబోటిక్స్", "బ్యాడ్మింటన్", "క్లబ్స్", "హ్యాకథాన్ క్లబ్", "क्लब", "खेलकूद", "जिम", "रोबोटिक्स", "संगीत", "नाट्य"],
     "question": "What student clubs and extracurricular activities can I join?",
     "question_hi": "मैं किन छात्र क्लबों और पाठ्येतर गतिविधियों में शामिल हो सकता हूँ?",
     "question_te": "నేను ఏ విద్యార్థి క్లబ్బులు మరియు పాఠ్యేతర కార్యకలాపాలలో చేరవచ్చు?",

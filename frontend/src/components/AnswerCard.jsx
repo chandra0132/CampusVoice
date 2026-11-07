@@ -1,14 +1,14 @@
 import React from 'react';
-import { Sparkles, BookOpen, AlertCircle, BookmarkCheck } from 'lucide-react';
+import { Sparkles, BookOpen, AlertCircle, BookmarkCheck, Info } from 'lucide-react';
 import AudioPlayer from './AudioPlayer';
 
-export default function AnswerCard({ answer, source, category, matched, audio, language }) {
+export default function AnswerCard({ answer, source, category, matched, is_sample, audio, language }) {
   if (!answer) return null;
 
   const isTelugu = language?.includes('te');
   const isHindi = language?.includes('hi');
   const isFallback = !matched;
-  const isSample = source?.includes('Sample Dataset');
+  const isSample = is_sample || source?.includes('Sample Dataset');
 
   return (
     <div className="w-full max-w-2xl mx-auto my-4">
@@ -33,13 +33,13 @@ export default function AnswerCard({ answer, source, category, matched, audio, l
               </span>
             )}
             {isSample && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                Sample Data
+              <span className="text-[11px] font-semibold tracking-wide px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-300">
+                Sample FAQ Dataset
               </span>
             )}
             {isFallback && (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-50 text-[#C86F55] border border-[#C86F55]/30">
-                Official Fallback
+              <span className="text-[11px] font-semibold tracking-wide px-2.5 py-0.5 rounded-full bg-orange-50 text-[#C86F55] border border-[#C86F55]/30">
+                Administration Fallback
               </span>
             )}
           </div>
@@ -53,6 +53,16 @@ export default function AnswerCard({ answer, source, category, matched, audio, l
             {answer}
           </p>
         </div>
+
+        {/* Informative Disclaimer for Sample vs Verified Data */}
+        {isSample && (
+          <div className="mt-3 p-2.5 rounded-xl bg-[#F3EFE5]/80 border border-[#DED9CE] text-[11px] text-[#77766F] flex items-center gap-2">
+            <Info className="w-3.5 h-3.5 text-[#E8B44A] shrink-0" />
+            <span>
+              This answer is from sample campus notices for the AI Challenge demo. Official institution policies will be reflected once administrative verification is complete.
+            </span>
+          </div>
+        )}
 
         {/* Source Citation */}
         <div className="mt-4 pt-3 border-t border-[#DED9CE]/60 flex items-start sm:items-center gap-2 text-xs text-[#77766F]">
@@ -77,4 +87,3 @@ export default function AnswerCard({ answer, source, category, matched, audio, l
     </div>
   );
 }
-
