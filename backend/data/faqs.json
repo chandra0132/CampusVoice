@@ -2,57 +2,99 @@
   {
     "id": 1,
     "category": "events",
-    "keywords": ["events", "technical fest", "hackathon", "annual day", "fest", "cultural", "ఈవెంట్స్", "ఉత్సవాలు", "कार्यक्रम", "उत्सव"],
+    "keywords": ["events", "fest", "techspark", "hackathon", "cultural", "annual day", "college events", "technical fest", "ఈవెంట్స్", "ఉత్సవాలు", "వేడుకలు", "కార్యక్రమాలు", "క్యాంపస్ ఈవెంట్స్", "టెక్ ఫెస్ట్", "హ్యాకథాన్", "कार्यक्रम", "उत्सव", "फेस्ट", "हैकथॉन", "इवेंट्स"],
     "question": "What events or fests are happening on campus?",
-    "answer": "The annual technical fest 'TechSpark' and inter-college hackathon are scheduled for next month. Detailed registration guidelines and schedule are published on the college events notice board.",
-    "source": "Office of Student Affairs - College Events Notice 2026-01"
+    "question_hi": "कैंपस में कौन से कार्यक्रम या फेस्ट आयोजित हो रहे हैं?",
+    "question_te": "క్యాంపస్‌లో ఏవైనా ఈవెంట్స్ లేదా ఉత్సవాలు జరుగుతున్నాయా?",
+    "answers": {
+      "en": "The annual technical fest 'TechSpark' and inter-college 24-hour hackathon are scheduled for next month. Official registration links and the detailed schedule are available on the campus events notice board.",
+      "hi": "वार्षिक टेक्निकल फेस्ट 'टेकस्पार्क' और इंटर-कॉलेज 24 घंटे का हैकथॉन अगले महीने आयोजित होने वाला है। विस्तृत कार्यक्रम और पंजीकरण लिंक कॉलेज इवेंट्स नोटिस बोर्ड पर उपलब्ध हैं।",
+      "te": "వార్షిక సాంకేతిక ఉత్సవం 'టెక్ స్పార్క్' మరియు ఇంటర్-కాలేజ్ 24 గంటల హ్యాకథాన్ వచ్చే నెలలో నిర్వహించబడుతున్నాయి. వివరాలు మరియు రిజిస్ట్రేషన్ సమాచారం అధికారిక ఈవెంట్స్ నోటీసు బోర్డులో అందుబాటులో ఉన్నాయి."
+    },
+    "source": "Office of Student Affairs - College Events Notice 2026-01 (Sample Dataset)"
   },
   {
     "id": 2,
     "category": "attendance",
-    "keywords": ["attendance", "minimum attendance", "shortage", "condonation", "హాజరు", "పర్సంటేజ్", "उपस्थिति", "अटेंडेंस"],
+    "keywords": ["attendance", "percentage", "shortage", "condonation", "minimum attendance", "attendance requirement", "rules", "హాజరు", "పర్సంటేజ్", "అటెండెన్స్", "కండోనేషన్", "నిబంధనలు", "హాజరు శాతం", "उपस्थिति", "अटेंडेंस", "हाजिरी", "नियम", "न्यूनतम उपस्थिति"],
     "question": "What is the minimum attendance requirement?",
-    "answer": "Students must maintain a minimum of 75% aggregate attendance in all theory and practical subjects to be eligible for end-semester examinations. Medical condonation up to 10% is subject to Academic Council approval.",
-    "source": "Academic Regulations Handbook 2025-2026, Section 4.2"
+    "question_hi": "कॉलेज में न्यूनतम उपस्थिति की क्या आवश्यकता है?",
+    "question_te": "కాలేజీలో కనీస హాజరు నిబంధన ఏమిటి?",
+    "answers": {
+      "en": "Students must maintain a minimum of 75% aggregate attendance across all courses to appear for semester examinations. Medical condonation up to 10% requires approval from the Academic Council.",
+      "hi": "सेमेस्टर परीक्षाओं में बैठने के लिए छात्रों को सभी विषयों में न्यूनतम 75% कुल उपस्थिति बनाए रखना अनिवार्य है। 10% तक की मेडिकल छूट के लिए एकेडमिक काउंसिल की मंजूरी आवश्यक है।",
+      "te": "సెమిస్టర్ పరీక్షలకు హాజరు కావడానికి విద్యార్థులు తప్పనిసరిగా కనీసం 75% సగటు హాజరును కలిగి ఉండాలి. 10% వరకు వైద్య పరమైన మినహాయింపు కోసం అకడమిక్ కౌన్సిల్ అనుమతి అవసరం."
+    },
+    "source": "Academic Regulations Handbook 2025-2026, Section 4.2 (Sample Dataset)"
   },
   {
     "id": 3,
     "category": "examinations",
-    "keywords": ["examinations", "exam schedule", "hall ticket", "mid terms", "end sem", "పరీక్షలు", "టైంటేబుల్", "परीक्षा", "टाइमटेबल"],
+    "keywords": ["examinations", "exam", "hall ticket", "timetable", "mid terms", "end sem", "exam schedule", "పరీక్షలు", "హాల్ టికెట్", "టైంటేబుల్", "ఎగ్జామ్స్", "మిడ్ పరీక్షలు", "షెడ్యూల్", "परीक्षा", "हॉल टिकट", "टाइमटेबल", "एग्जाम", "परीक्षा समय"],
     "question": "When do semester examinations begin and how can I get the hall ticket?",
-    "answer": "End-semester examinations commence from December 1st. Hall tickets will be issued through the student ERP portal one week prior to exams after clearing dues.",
-    "source": "Controller of Examinations - Notification Circular COE/2026/08"
+    "question_hi": "सेमेस्टर परीक्षाएं कब शुरू होती हैं और हॉल टिकट कैसे प्राप्त करें?",
+    "question_te": "సెమిస్టర్ పరీక్షలు ఎప్పుడు ప్రారంభమవుతాయి మరియు హాల్ టిక్కెట్ ఎలా పొందాలి?",
+    "answers": {
+      "en": "End-semester examinations commence on December 1st. Hall tickets will be released on the student portal one week prior to the exams after clearing semester dues.",
+      "hi": "एंड-सेमेस्टर परीक्षाएं 1 दिसंबर से शुरू होंगी। परीक्षा हॉल टिकट परीक्षा से एक सप्ताह पहले छात्र पोर्टल पर जारी किए जाएंगे।",
+      "te": "ఎండ్-సెమిస్టర్ పరీక్షలు డిసెంబర్ 1 నుండి ప్రారంభమవుతాయి. అన్ని బకాయిలు చెల్లించిన తర్వాత పరీక్షలకు వారం రోజుల ముందు విద్యార్థి పోర్టల్‌లో హాల్ టిక్కెట్లు అందుబాటులో ఉంచబడతాయి."
+    },
+    "source": "Controller of Examinations - Notification Circular COE/2026/08 (Sample Dataset)"
   },
   {
     "id": 4,
     "category": "placements",
-    "keywords": ["placements", "campus drive", "internship", "placement cell", "packages", "ప్లేస్మెంట్స్", "ఉద్యోగాలు", "प्लेसमेंट", "नौकरी"],
+    "keywords": ["placements", "campus drive", "internship", "placement cell", "cgpa criteria", "highest package", "recruitment", "companies", "ప్లేస్మెంట్స్", "ఉద్యోగాలు", "ఇంటర్న్షిప్", "క్యాంపస్ సెలెక్షన్స్", "కంపెనీలు", "ట్రైనింగ్ సెల్", "సిజిపిఎ", "प्लेसमेंट", "नौकरी", "इंटर्नशिप", "पैकेज", "कंपनियां", "रिक्रूटमेंट"],
     "question": "What are the eligibility criteria and procedures for campus placements?",
-    "answer": "Students with a CGPA of 6.5 and above with no active backlogs are eligible for campus placement drives. All interested candidates must register with the Training & Placement Cell portal.",
-    "source": "Training and Placement Cell - Campus Recruitment Guidelines"
+    "question_hi": "कैंपस प्लेसमेंट के लिए पात्रता मानदंड और प्रक्रियाएं क्या हैं?",
+    "question_te": "క్యాంపస్ ప్లేస్‌మెంట్‌ల అర్హత ప్రమాణాలు మరియు విధానాలు ఏమిటి?",
+    "answers": {
+      "en": "Campus placement drives require a minimum CGPA of 6.5 with no active backlogs. Eligible students must complete profile verification on the Training & Placement portal.",
+      "hi": "कैंपस प्लेसमेंट ड्राइव में शामिल होने के लिए बिना किसी एक्टिव बैकलॉग के न्यूनतम 6.5 सीजीपीए आवश्यक है। पात्र छात्र ट्रेनिंग एंड प्लेसमेंट सेल के पोर्टल पर पंजीकरण कराएं।",
+      "te": "క్యాంపస్ ప్లేస్‌మెంట్ డ్రైవ్‌లలో పాల్గొనడానికి ఎటువంటి బ్యాక్‌లాగ్‌లు లేకుండా కనీసం 6.5 సిజిపిఎ అవసరం. అర్హత గల విద్యార్థులు ట్రైనింగ్ & ప్లేస్‌మెంట్ సెల్ పోర్టల్‌లో నమోదు చేసుకోవాలి."
+    },
+    "source": "Training and Placement Cell - Campus Recruitment Guidelines (Sample Dataset)"
   },
   {
     "id": 5,
     "category": "academic information",
-    "keywords": ["academics", "syllabus", "credits", "curriculum", "library", "సిలబస్", "లైబ్రరీ", "पाठ्यक्रम", "लाइब्रेरी"],
+    "keywords": ["academics", "syllabus", "credits", "curriculum", "library", "timings", "reading room", "books", "పుస్తకాలు", "సిలబస్", "లైబ్రరీ", "సమయాలు", "క్రెడిట్స్", "కరిక్యులమ్", "చదువు", "पाठ्यक्रम", "लाइब्रेरी", "क्रेडिट्स", "समय", "किताबें", "एकेडेमिक्स"],
     "question": "What is the academic credit structure and library timings?",
-    "answer": "Each undergraduate semester contains 20-22 credits. The central library is open Monday through Saturday from 8:00 AM to 8:00 PM with digital access available 24/7 via the campus intranet.",
-    "source": "Central Library & Academic Dean Bulletin"
+    "question_hi": "एकेडेमिक क्रेडिट संरचना और लाइब्रेरी का समय क्या है?",
+    "question_te": "అకడమిక్ క్రెడిట్ నిర్మాణం మరియు లైబ్రరీ సమయాలు ఏమిటి?",
+    "answers": {
+      "en": "Undergraduate semester coursework comprises 20 to 22 credits. The Central Library is open Monday through Saturday from 8:00 AM to 8:00 PM, with 24/7 digital access available via the intranet.",
+      "hi": "प्रत्येक अंडरग्रेजुएट सेमेस्टर में 20 से 22 क्रेडिट्स होते हैं। सेंट्रल लाइब्रेरी सोमवार से शनिवार सुबह 8:00 बजे से रात 8:00 बजे तक खुली रहती है, और डिजिटल लाइब्रेरी 24/7 उपलब्ध है।",
+      "te": "ప్రతి అండర్ గ్రాడ్యుయేట్ సెమిస్టర్‌లో 20 నుండి 22 క్రెడిట్‌లు ఉంటాయి. సెంట్రల్ లైబ్రరీ సోమవారం నుండి శనివారం వరకు ఉదయం 8:00 నుండి రాత్రి 8:00 గంటల వరకు తెరిచి ఉంటుంది."
+    },
+    "source": "Central Library & Academic Dean Bulletin (Sample Dataset)"
   },
   {
     "id": 6,
     "category": "departments",
-    "keywords": ["departments", "cse", "ece", "mechanical", "civil", "faculty", "డిపార్ట్మెంట్స్", "విభాగాలు", "विभाग"],
+    "keywords": ["departments", "cse", "ece", "mechanical", "civil", "faculty", "branches", "specialization", "విభాగాలు", "డిపార్ట్మెంట్స్", "సిఎస్ఈ", "ఈసిఈ", "మెకానికల్", "సివిల్", "శాఖలు", "विभाग", "शाखाएं", "फैकल्टी", "कंप्यूटर साइंस", "मैकेनिकल"],
     "question": "Which academic departments exist on campus?",
-    "answer": "Campus departments include Computer Science & Engineering, Electronics & Communication, Electrical & Electronics, Mechanical Engineering, Civil Engineering, and Humanities & Sciences.",
-    "source": "College Information Prospectus 2026"
+    "question_hi": "कैंपस में कौन से शैक्षणिक विभाग उपलब्ध हैं?",
+    "question_te": "క్యాంపస్‌లో ఏ విద్యా విభాగాలు ఉన్నాయి?",
+    "answers": {
+      "en": "The college hosts academic departments in Computer Science & Engineering, Electronics & Communication, Electrical & Electronics, Mechanical Engineering, Civil Engineering, and Humanities & Sciences.",
+      "hi": "कॉलेज में कंप्यूटर साइंस, इलेक्ट्रॉनिक्स एंड कम्युनिकेशन, इलेक्ट्रिकल, मैकेनिकल, सिविल इंजीनियरिंग और मानविकी विभाग संचालित हैं।",
+      "te": "కళాశాలలో కంప్యూటర్ సైన్స్, ఎలక్ట్రానిక్స్ & కమ్యూనికేషన్, ఎలక్ట్రికల్, మెకానికల్, సివిల్ ఇంజనీరింగ్ మరియు హ్యుమానిటీస్ విభాగాలు ఉన్నాయి."
+    },
+    "source": "College Information Prospectus 2026 (Sample Dataset)"
   },
   {
     "id": 7,
     "category": "student activities",
-    "keywords": ["clubs", "sports", "student activities", "gym", "music", "robotics", "క్లబ్బులు", "క్రీడలు", "क्लब", "खेलकूद"],
+    "keywords": ["clubs", "sports", "student activities", "gym", "music", "robotics", "cultural club", "badminton", "ground", "క్లబ్బులు", "క్రీడలు", "వ్యాయామశాల", "సంగీతం", "క్రీడా ప్రాంగణం", "రోబోటిక్స్", "బ్యాడ్మింటన్", "క్లబ్స్", "హ్యాకథాన్ క్లబ్", "क्लब", "खेलकूद", "जिम", "रोबोटिक्स", "संगीत", "नाट्य"],
     "question": "What student clubs and extracurricular activities can I join?",
-    "answer": "Students can participate in various technical and cultural clubs including the Coding Club, Robotics Society, Music & Drama Club, and the Sports Council with full sports complex facilities.",
-    "source": "Directorate of Student Welfare - Student Clubs Guide"
+    "question_hi": "मैं किन छात्र क्लबों और पाठ्येतर गतिविधियों में शामिल हो सकता हूँ?",
+    "question_te": "నేను ఏ విద్యార్థి క్లబ్బులు మరియు పాఠ్యేతర కార్యకలాపాలలో చేరవచ్చు?",
+    "answers": {
+      "en": "Active student clubs include the Coding Club, Robotics Society, Music & Drama Club, and the Sports Council with indoor badminton courts, gym, and outdoor sports grounds.",
+      "hi": "छात्रों के लिए कोडिंग क्लब, रोबोटिक्स सोसाइटी, संगीत और नाट्य क्लब तथा खेल परिषद उपलब्ध हैं, जिसमें इनडोर बैडमिंटन कोर्ट और जिम की सुविधाएं शामिल हैं।",
+      "te": "విద్యార్థుల కోసం కోడింగ్ క్లబ్, రోబోటిక్స్ సొసైటీ, మ్యూజిక్ & డ్రామా క్లబ్ మరియు స్పోర్ట్స్ కౌన్సిల్ పనిచేస్తున్నాయి, వీటిలో జిమ్ మరియు క్రీడా సదుపాయాలు ఉన్నాయి."
+    },
+    "source": "Directorate of Student Welfare - Student Clubs Guide (Sample Dataset)"
   }
 ]

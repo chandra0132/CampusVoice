@@ -1,28 +1,32 @@
 import os
+import base64
 import logging
+from typing import Optional
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, status
+from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 try:
-    from backend.gnani_service import gnani_service
+    from backend.gnani_service import gnani_service, normalize_lang_code
     from backend.knowledge import knowledge_base
 except ImportError:
-    from gnani_service import gnani_service
+    from gnani_service import gnani_service, normalize_lang_code
     from knowledge import knowledge_base
 
 load_dotenv()
 
-# Setup logging
+# Setup structured logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("campusvoice")
+logger = logging.getLogger("campusvoice.api")
 
 app = FastAPI(
     title="CampusVoice API",
-    description="Multilingual Voice-First Campus AI Assistant for the Great Indian AI Internship Challenge (Gnani AI)",
+    description="Multilingual Voice-First Campus AI Assistant powered by Gnani AI (Prisma STT & Timbre TTS)",
     version="1.0.0"
 )
 
@@ -32,34 +36,43 @@ origins = [
     frontend_url,
     "http://localhost:5173",
     "http://localhost:3000",
-    "http://127.0.0.1:5173"
+    "http://127.0.0.1:5173",
+    "*"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits local dev and preview environments
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 MAX_AUDIO_SIZE = 10 * 1024 * 1024  # 10 MB limit
-ALLOWED_LANGUAGES = {"te", "hi", "en"}
+ALLOWED_LANGUAGES = {"te", "hi", "en", "te-in", "hi-in", "en-in"}
+
+class SpeakRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=1000, description="Text to synthesize into speech")
+    language: str = Field("en", description="Target language: te, hi, or en")
+    voice: Optional[str] = Field(None, description="Optional custom voice name")
 
 @app.get("/", tags=["Status"])
 async def root():
-    """Root endpoint returning API status and service identity."""
+    """Root endpoint returning API status and project identity."""
     return {
         "project": "CampusVoice",
         "tagline": "Your Campus. Your Language. Your Voice.",
         "status": "online",
         "version": "1.0.0",
-        "description": "Multilingual Voice-First Campus AI Assistant"
+        "pipeline": "Gnani Prisma STT -> Campus Knowledge Base -> Gnani Timbre TTS"
     }
 
 @app.get("/api/health", tags=["Status"])
 async def health_check():
-    """Return backend health, knowledge base statistics, and configured model status."""
+    """
+    Check backend health and verify Gnani service configuration
+    without exposing sensitive API credentials.
+    """
     gnani_status = gnani_service.get_status()
     return {
         "status": "healthy",
@@ -70,83 +83,168 @@ async def health_check():
         }
     }
 
-@app.post("/api/ask", tags=["Assistant"])
-async def ask_question(
-    audio: UploadFile = File(..., description="Multipart audio recording"),
+@app.post("/api/transcribe", tags=["Speech"])
+async def transcribe_audio(
+    audio: UploadFile = File(..., description="Multipart audio recording (WAV, MP3, WebM, etc.)"),
     language: str = Form("en", description="Target language code: te, hi, or en")
 ):
     """
-    Process spoken student question:
-    1. Validate audio and language input.
-    2. Transcribe audio via Gnani Prisma STT.
-    3. Retrieve relevant answer from campus knowledge base.
-    4. Generate speech audio via Gnani Timbre TTS.
-    5. Return complete transcript, contextual response, source, and audio.
+    Transcribe spoken student query using Gnani Prisma STT.
+    Returns transcript and detected language.
     """
-    # 1. Input validation
-    if language not in ALLOWED_LANGUAGES:
+    lang_clean = language.strip().lower()
+    if lang_clean not in ALLOWED_LANGUAGES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Unsupported language '{language}'. Supported languages: {list(ALLOWED_LANGUAGES)}"
+            detail=f"Unsupported language '{language}'. Supported: te, hi, en."
         )
 
     audio_bytes = await audio.read()
     if not audio_bytes or len(audio_bytes) == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Received empty audio recording. Please record your question and try again."
+            detail="Received empty audio recording. Please speak and try again."
         )
 
     if len(audio_bytes) > MAX_AUDIO_SIZE:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"Audio file exceeds maximum allowed size of {MAX_AUDIO_SIZE // (1024 * 1024)}MB."
+            detail="Audio file exceeds 10MB limit."
         )
 
-    # 2. Check Gnani Service Configuration
     if not gnani_service.is_configured():
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Gnani AI speech services are not configured. Please supply valid GNANI_API_KEY in the backend environment."
+            detail="Gnani AI speech services are not configured. Set GNANI_API_KEY in backend/.env"
         )
 
-    # Core pipeline calls (to be completed and verified in Phases 2 & 3)
     try:
-        transcript = await gnani_service.transcribe(audio_bytes, language)
-    except NotImplementedError:
-        raise HTTPException(
-            status_code=status.HTTP_501_NOT_IMPLEMENTED,
-            detail="Prisma STT integration is pending API credential verification in Phase 2."
-        )
+        stt_result = await gnani_service.transcribe(audio_bytes, lang_clean)
+        return {
+            "success": True,
+            "transcript": stt_result["transcript"],
+            "detected_language": stt_result["detected_language"],
+            "model": stt_result["model"]
+        }
     except Exception as e:
-        logger.error("Transcription error: %s", str(e))
+        logger.error("Transcription error in /api/transcribe: %s", str(e))
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Speech recognition service error."
+            detail=f"Speech-to-text processing failed: {str(e)}"
         )
 
-    # Search knowledge base
-    faq_match = knowledge_base.search(transcript)
-    if faq_match:
-        answer = faq_match["answer"]
-        source = faq_match.get("source", "Campus Notice Board")
-    else:
-        answer = "I could not find official information matching your query in the campus handbook. Please contact the student administrative office for assistance."
-        source = "Campus Administration Fallback"
+@app.post("/api/speak", tags=["Speech"])
+async def synthesize_speech(request: SpeakRequest):
+    """
+    Convert text to speech using Gnani Timbre TTS.
+    Returns playable audio/wav stream.
+    """
+    lang_clean = request.language.strip().lower()
+    if lang_clean not in ALLOWED_LANGUAGES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported language '{request.language}'. Supported: te, hi, en."
+        )
 
-    # Synthesize response
+    if not gnani_service.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Gnani AI speech services are not configured. Set GNANI_API_KEY in backend/.env"
+        )
+
     try:
-        audio_response = await gnani_service.synthesize(answer, language)
+        audio_bytes = await gnani_service.synthesize(
+            text=request.text,
+            language=lang_clean,
+            voice=request.voice
+        )
+        return Response(content=audio_bytes, media_type="audio/wav")
     except Exception as e:
-        logger.error("Synthesis error: %s", str(e))
-        audio_response = None
+        logger.error("Speech synthesis error in /api/speak: %s", str(e))
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Text-to-speech synthesis failed: {str(e)}"
+        )
+
+@app.post("/api/ask", tags=["Assistant"])
+async def ask_question(
+    audio: UploadFile = File(..., description="Multipart audio recording"),
+    language: str = Form("en", description="Target language code: te, hi, or en")
+):
+    """
+    Complete CampusVoice Multilingual Pipeline:
+    1. Transcribe incoming student voice using Gnani Prisma STT.
+    2. Search campus FAQ knowledge base for grounded answer & source.
+    3. Synthesize response audio using Gnani Timbre TTS.
+    4. Return transcript, answer, source citation, and base64-encoded WAV audio.
+    """
+    lang_clean = language.strip().lower()
+    if lang_clean not in ALLOWED_LANGUAGES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported language '{language}'. Supported: te, hi, en."
+        )
+
+    audio_bytes = await audio.read()
+    if not audio_bytes or len(audio_bytes) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Received empty audio recording. Please speak and try again."
+        )
+
+    if len(audio_bytes) > MAX_AUDIO_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="Audio file exceeds 10MB limit."
+        )
+
+    if not gnani_service.is_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Gnani AI speech services are not configured. Set GNANI_API_KEY in backend/.env"
+        )
+
+    # Step 1: Speech-to-Text via Prisma
+    try:
+        stt_result = await gnani_service.transcribe(audio_bytes, lang_clean)
+        transcript = stt_result["transcript"]
+        detected_language = stt_result["detected_language"]
+    except Exception as e:
+        logger.error("Step 1 (Prisma STT) failed: %s", str(e))
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Failed to transcribe audio: {str(e)}"
+        )
+
+    # Step 2: Campus Knowledge Base Retrieval
+    faq_match = knowledge_base.search(transcript, lang_clean)
+    answer = faq_match["answer"]
+    source = faq_match["source"]
+    category = faq_match.get("category")
+    matched = faq_match.get("matched", False)
+
+    # Step 3: Text-to-Speech via Timbre
+    audio_base64 = None
+    try:
+        synth_bytes = await gnani_service.synthesize(text=answer, language=lang_clean)
+        # Embed as standard base64 data URI for instant HTML5 audio playback
+        audio_b64_str = base64.b64encode(synth_bytes).decode("utf-8")
+        audio_base64 = f"data:audio/wav;base64,{audio_b64_str}"
+    except Exception as e:
+        logger.error("Step 3 (Timbre TTS) failed: %s", str(e))
+        # Do not fail whole request if TTS has an issue; still return text answer
+        audio_base64 = None
 
     return {
+        "success": True,
         "transcript": transcript,
         "answer": answer,
+        "detected_language": detected_language,
         "source": source,
-        "language": language,
-        "has_audio": audio_response is not None
+        "category": category,
+        "matched": matched,
+        "audio": audio_base64,
+        "has_audio": audio_base64 is not None
     }
 
 if __name__ == "__main__":

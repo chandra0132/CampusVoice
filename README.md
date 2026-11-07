@@ -90,3 +90,4 @@ Access the application at: `http://localhost:5173`
 ## 🛡️ License & Submission
 Built for the **Great Indian AI Internship Challenge** (Submission Deadline: November 10, 2026).
 Project created by solo developer adhering to strict production guidelines.
+
