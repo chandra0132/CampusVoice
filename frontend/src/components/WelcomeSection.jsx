@@ -92,3 +92,4 @@ export default function WelcomeSection({ onSelectQuestion, selectedLanguage }) {
     </section>
   );
 }
+

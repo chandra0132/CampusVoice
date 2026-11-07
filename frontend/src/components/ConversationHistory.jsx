@@ -80,3 +80,4 @@ export default function ConversationHistory({ history, onClearHistory, onPlayAud
     </section>
   );
 }
+

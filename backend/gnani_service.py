@@ -1,5 +1,6 @@
 import os
 import io
+import asyncio
 import logging
 import base64
 from typing import Optional, Dict, Any, Tuple
@@ -7,17 +8,17 @@ import httpx
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Ensure .env is loaded from the backend directory regardless of cwd
 load_dotenv(Path(__file__).resolve().parent / ".env")
 load_dotenv()
 
 logger = logging.getLogger("campusvoice.gnani")
 
 # API Base URL and Endpoints
-GNANI_BASE_URL = os.getenv("GNANI_BASE_URL", "https://api.vachana.ai")
+GNANI_BASE_URL = os.getenv("GNANI_BASE_URL", "https://api.vachana.ai").rstrip("/")
 PRISMA_STT_URL = f"{GNANI_BASE_URL}/stt/v3"
 TIMBRE_TTS_URL = f"{GNANI_BASE_URL}/api/v1/tts/inference"
 
-# Language and Voice Mapping
 LANGUAGE_CODE_MAP = {
     "te": "te-IN",
     "hi": "hi-IN",
@@ -46,22 +47,18 @@ def transcode_to_wav_if_needed(audio_bytes: bytes, filename: str = "audio.wav") 
     (WAV, MP3, FLAC, OGG, M4A, AAC).
     Converts WebM or unknown formats to standard WAV PCM (16kHz Mono).
     """
-    # Direct match for known audio signatures
+    # Direct match for clean standard WAV
     if audio_bytes.startswith(b'RIFF') and b'WAVE' in audio_bytes[:16]:
         return audio_bytes, "audio/wav"
-    if audio_bytes.startswith(b'ID3') or audio_bytes.startswith(b'\xff\xfb') or audio_bytes.startswith(b'\xff\xf3'):
-        return audio_bytes, "audio/mp3"
-    if audio_bytes.startswith(b'OggS'):
-        return audio_bytes, "audio/ogg"
-    if audio_bytes.startswith(b'fLaC'):
-        return audio_bytes, "audio/flac"
 
-    # For WebM or other formats, transcode using PyAV
+    # For M4A, WebM, OGG, MP3, etc., decode with PyAV and standardize to 16kHz mono WAV
     try:
         import av
         input_buffer = io.BytesIO(audio_bytes)
         output_buffer = io.BytesIO()
         with av.open(input_buffer) as in_container:
+            if not in_container.streams.audio:
+                raise ValueError("No audio streams found in uploaded media file.")
             in_stream = in_container.streams.audio[0]
             resampler = av.AudioResampler(format='s16', layout='mono', rate=16000)
             with av.open(output_buffer, 'w', 'wav') as out_container:
@@ -75,10 +72,20 @@ def transcode_to_wav_if_needed(audio_bytes: bytes, filename: str = "audio.wav") 
                         out_container.mux(packet)
                 for packet in out_stream.encode(None):
                     out_container.mux(packet)
-        return output_buffer.getvalue(), "audio/wav"
+        wav_data = output_buffer.getvalue()
+        if len(wav_data) > 44:
+            return wav_data, "audio/wav"
+        raise ValueError("Audio transcoding yielded empty output.")
     except Exception as e:
-        logger.warning("Audio transcoding error: %s. Forwarding original payload.", str(e))
-        return audio_bytes, "audio/wav"
+        logger.error("Audio processing/transcoding exception: [%s] %s", type(e).__name__, str(e))
+        # If input was already standard MP3/FLAC, return as is
+        if audio_bytes.startswith(b'ID3') or audio_bytes.startswith(b'\xff\xfb') or audio_bytes.startswith(b'\xff\xf3'):
+            return audio_bytes, "audio/mp3"
+        if audio_bytes.startswith(b'fLaC'):
+            return audio_bytes, "audio/flac"
+        if audio_bytes.startswith(b'OggS'):
+            return audio_bytes, "audio/ogg"
+        raise RuntimeError(f"Could not decode or convert audio format ({type(e).__name__}): {str(e)}")
 
 class GnaniService:
     """
@@ -99,7 +106,7 @@ class GnaniService:
         return bool(self.api_key and self.api_key.strip() and self.api_key != "your_gnani_api_key_here")
 
     def get_status(self) -> Dict[str, Any]:
-        """Return configuration and health status of speech models."""
+        """Return configuration and health status of speech models without exposing secrets."""
         configured = self.is_configured()
         return {
             "configured": configured,
@@ -113,9 +120,7 @@ class GnaniService:
     async def transcribe(self, audio_bytes: bytes, language: str = "en") -> Dict[str, Any]:
         """
         Transcribe speech audio using Gnani Prisma STT (POST /stt/v3).
-        
-        Returns:
-            Dict containing transcript, detected/configured language, request ID, and model.
+        Provides granular diagnostics for network, DNS, and HTTP errors.
         """
         if not self.is_configured():
             raise RuntimeError("Gnani API key is not configured. Please set GNANI_API_KEY in backend/.env")
@@ -123,7 +128,7 @@ class GnaniService:
         if not audio_bytes or len(audio_bytes) == 0:
             raise ValueError("Audio recording is empty.")
 
-        # Ensure audio is in supported format
+        # Ensure audio is properly decoded and formatted
         processed_audio, mime_type = transcode_to_wav_if_needed(audio_bytes)
         lang_code = normalize_lang_code(language)
 
@@ -139,30 +144,73 @@ class GnaniService:
             "language_code": lang_code
         }
 
-        logger.info("Sending STT request to Prisma (language_code=%s, size=%d bytes)", lang_code, len(processed_audio))
+        logger.info(
+            "Dispatching Prisma STT request -> URL: %s | Host: api.vachana.ai | Lang: %s | Payload Size: %d bytes",
+            PRISMA_STT_URL, lang_code, len(processed_audio)
+        )
+
+        response = None
+        max_attempts = 2
 
         async with httpx.AsyncClient(timeout=self.client_timeout) as client:
-            try:
-                response = await client.post(PRISMA_STT_URL, headers=headers, files=files, data=data)
-            except httpx.TimeoutException:
-                logger.error("Prisma STT request timed out after %s seconds", self.client_timeout)
-                raise TimeoutError("Speech recognition service timed out. Please try speaking again.")
-            except httpx.RequestError as exc:
-                logger.error("Network error while connecting to Prisma STT: %s", exc)
-                raise RuntimeError("Failed to connect to speech recognition service.")
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = await client.post(PRISMA_STT_URL, headers=headers, files=files, data=data)
+                    # Retry on transient upstream 502/503/504
+                    if response.status_code in {502, 503, 504} and attempt < max_attempts:
+                        logger.warning(
+                            "Prisma STT upstream %d Gateway/Service error (attempt %d/%d). Retrying in 1.2s...",
+                            response.status_code, attempt, max_attempts
+                        )
+                        await asyncio.sleep(1.2)
+                        continue
+                    break
+                except httpx.ConnectTimeout as exc:
+                    logger.error("Prisma STT connection timed out connecting to api.vachana.ai: %s", exc)
+                    raise TimeoutError(f"Connection timeout to Gnani STT service ({type(exc).__name__})")
+                except httpx.ReadTimeout as exc:
+                    logger.error("Prisma STT read timed out waiting for audio transcription: %s", exc)
+                    raise TimeoutError(f"Transcription read timeout after {self.client_timeout}s ({type(exc).__name__})")
+                except httpx.ConnectError as exc:
+                    err_msg = str(exc)
+                    if "nodename nor servname provided" in err_msg or "gaierror" in err_msg:
+                        logger.error(
+                            "Prisma STT DNS resolution failed for api.vachana.ai. "
+                            "Ensure the backend process has outbound internet/DNS access. Details: %s", err_msg
+                        )
+                        raise RuntimeError(f"DNS resolution failed for api.vachana.ai. Please check host internet connection: {err_msg}")
+                    elif "Connection refused" in err_msg:
+                        logger.error("Prisma STT connection refused by api.vachana.ai: %s", err_msg)
+                        raise RuntimeError(f"Connection refused by Gnani STT endpoint: {err_msg}")
+                    else:
+                        logger.error("Prisma STT connection error [%s]: %s", type(exc).__name__, err_msg)
+                        raise RuntimeError(f"Cannot connect to Gnani STT service ({type(exc).__name__}): {err_msg}")
+                except httpx.RemoteProtocolError as exc:
+                    logger.error("Prisma STT remote protocol error: %s", exc)
+                    raise RuntimeError(f"Upstream protocol error from Gnani STT: {exc}")
+                except httpx.RequestError as exc:
+                    logger.error("Prisma STT HTTP request error [%s]: %s", type(exc).__name__, exc)
+                    raise RuntimeError(f"Network request error reaching Gnani STT ({type(exc).__name__}): {exc}")
+
+        if response is None:
+            raise RuntimeError("Prisma STT failed to receive any HTTP response.")
 
         if response.status_code != 200:
-            error_msg = f"Prisma STT failed with status {response.status_code}: {response.text}"
-            logger.error(error_msg)
+            status_code = response.status_code
+            raw_text = response.text
+            # Sanitize response body to avoid dumping huge HTML
+            clean_snippet = raw_text[:300].strip()
+            logger.error("Prisma STT returned non-200 status [%d]: %s", status_code, clean_snippet)
+            
             try:
                 err_json = response.json()
-                detail = err_json.get("error", {}).get("message") or err_json.get("message") or response.text
+                detail = err_json.get("error", {}).get("message") or err_json.get("message") or clean_snippet
             except Exception:
-                detail = response.text
-            raise RuntimeError(f"Speech recognition error ({response.status_code}): {detail}")
+                detail = clean_snippet
+            raise RuntimeError(f"Gnani STT API error ({status_code}): {detail}")
 
         result = response.json()
-        logger.info("Prisma STT response: %s", result)
+        logger.info("Prisma STT successful response: request_id=%s, model=%s", result.get("request_id"), result.get("model"))
 
         transcript = result.get("transcript", "").strip()
         detected_lang = result.get("detected_language") or lang_code
@@ -178,9 +226,7 @@ class GnaniService:
     async def synthesize(self, text: str, language: str = "en", voice: Optional[str] = None) -> bytes:
         """
         Synthesize text into speech using Gnani Timbre TTS (POST /api/v1/tts/inference).
-
-        Returns:
-            Raw audio/wav binary bytes.
+        Provides granular diagnostics for network, DNS, and HTTP errors.
         """
         if not self.is_configured():
             raise RuntimeError("Gnani API key is not configured. Please set GNANI_API_KEY in backend/.env")
@@ -211,31 +257,61 @@ class GnaniService:
             }
         }
 
-        logger.info("Sending TTS request to Timbre (voice=%s, lang=%s, chars=%d)", chosen_voice, lang_code, len(text))
+        logger.info(
+            "Dispatching Timbre TTS request -> Voice: %s | Lang: %s | Chars: %d",
+            chosen_voice, lang_code, len(text)
+        )
+
+        response = None
+        max_attempts = 2
 
         async with httpx.AsyncClient(timeout=self.client_timeout) as client:
-            try:
-                response = await client.post(TIMBRE_TTS_URL, headers=headers, json=payload)
-            except httpx.TimeoutException:
-                logger.error("Timbre TTS request timed out after %s seconds", self.client_timeout)
-                raise TimeoutError("Voice synthesis service timed out.")
-            except httpx.RequestError as exc:
-                logger.error("Network error while connecting to Timbre TTS: %s", exc)
-                raise RuntimeError("Failed to connect to voice synthesis service.")
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    response = await client.post(TIMBRE_TTS_URL, headers=headers, json=payload)
+                    if response.status_code in {502, 503, 504} and attempt < max_attempts:
+                        logger.warning(
+                            "Timbre TTS upstream %d error (attempt %d/%d). Retrying in 1.2s...",
+                            response.status_code, attempt, max_attempts
+                        )
+                        await asyncio.sleep(1.2)
+                        continue
+                    break
+                except httpx.ConnectTimeout as exc:
+                    logger.error("Timbre TTS connection timeout: %s", exc)
+                    raise TimeoutError(f"Connection timeout to Gnani TTS service ({type(exc).__name__})")
+                except httpx.ReadTimeout as exc:
+                    logger.error("Timbre TTS read timeout: %s", exc)
+                    raise TimeoutError(f"Voice synthesis read timeout ({type(exc).__name__})")
+                except httpx.ConnectError as exc:
+                    err_msg = str(exc)
+                    if "nodename nor servname provided" in err_msg or "gaierror" in err_msg:
+                        logger.error("Timbre TTS DNS resolution failed for api.vachana.ai: %s", err_msg)
+                        raise RuntimeError(f"DNS resolution failed for api.vachana.ai. Please check internet access: {err_msg}")
+                    else:
+                        logger.error("Timbre TTS connection error [%s]: %s", type(exc).__name__, err_msg)
+                        raise RuntimeError(f"Cannot connect to Gnani TTS service ({type(exc).__name__}): {err_msg}")
+                except httpx.RequestError as exc:
+                    logger.error("Timbre TTS HTTP request error [%s]: %s", type(exc).__name__, exc)
+                    raise RuntimeError(f"Network request error reaching Gnani TTS ({type(exc).__name__}): {exc}")
+
+        if response is None:
+            raise RuntimeError("Timbre TTS failed to receive any HTTP response.")
 
         if response.status_code != 200:
-            error_msg = f"Timbre TTS failed with status {response.status_code}: {response.text}"
-            logger.error(error_msg)
+            status_code = response.status_code
+            clean_snippet = response.text[:300].strip()
+            logger.error("Timbre TTS returned non-200 status [%d]: %s", status_code, clean_snippet)
             try:
                 err_json = response.json()
-                detail = err_json.get("error", {}).get("message") or err_json.get("message") or response.text
+                detail = err_json.get("error", {}).get("message") or err_json.get("message") or clean_snippet
             except Exception:
-                detail = response.text
-            raise RuntimeError(f"Voice synthesis error ({response.status_code}): {detail}")
+                detail = clean_snippet
+            raise RuntimeError(f"Gnani TTS API error ({status_code}): {detail}")
 
         audio_bytes = response.content
         if len(audio_bytes) < 44 or not audio_bytes.startswith(b'RIFF'):
-            logger.warning("Timbre returned unexpected payload without RIFF header: %s", audio_bytes[:100])
+            logger.warning("Timbre returned unexpected audio payload without RIFF header (%d bytes)", len(audio_bytes))
 
         return audio_bytes
 

@@ -35,3 +35,4 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange })
     </div>
   );
 }
+
