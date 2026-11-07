@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "category": "events",
+    "keywords": ["events", "technical fest", "hackathon", "annual day", "fest", "cultural", "ఈవెంట్స్", "ఉత్సవాలు", "कार्यक्रम", "उत्सव"],
+    "question": "What events or fests are happening on campus?",
+    "answer": "The annual technical fest 'TechSpark' and inter-college hackathon are scheduled for next month. Detailed registration guidelines and schedule are published on the college events notice board.",
+    "source": "Office of Student Affairs - College Events Notice 2026-01"
+  },
+  {
+    "id": 2,
+    "category": "attendance",
+    "keywords": ["attendance", "minimum attendance", "shortage", "condonation", "హాజరు", "పర్సంటేజ్", "उपस्थिति", "अटेंडेंस"],
+    "question": "What is the minimum attendance requirement?",
+    "answer": "Students must maintain a minimum of 75% aggregate attendance in all theory and practical subjects to be eligible for end-semester examinations. Medical condonation up to 10% is subject to Academic Council approval.",
+    "source": "Academic Regulations Handbook 2025-2026, Section 4.2"
+  },
+  {
+    "id": 3,
+    "category": "examinations",
+    "keywords": ["examinations", "exam schedule", "hall ticket", "mid terms", "end sem", "పరీక్షలు", "టైంటేబుల్", "परीक्षा", "टाइमटेबल"],
+    "question": "When do semester examinations begin and how can I get the hall ticket?",
+    "answer": "End-semester examinations commence from December 1st. Hall tickets will be issued through the student ERP portal one week prior to exams after clearing dues.",
+    "source": "Controller of Examinations - Notification Circular COE/2026/08"
+  },
+  {
+    "id": 4,
+    "category": "placements",
+    "keywords": ["placements", "campus drive", "internship", "placement cell", "packages", "ప్లేస్మెంట్స్", "ఉద్యోగాలు", "प्लेसमेंट", "नौकरी"],
+    "question": "What are the eligibility criteria and procedures for campus placements?",
+    "answer": "Students with a CGPA of 6.5 and above with no active backlogs are eligible for campus placement drives. All interested candidates must register with the Training & Placement Cell portal.",
+    "source": "Training and Placement Cell - Campus Recruitment Guidelines"
+  },
+  {
+    "id": 5,
+    "category": "academic information",
+    "keywords": ["academics", "syllabus", "credits", "curriculum", "library", "సిలబస్", "లైబ్రరీ", "पाठ्यक्रम", "लाइब्रेरी"],
+    "question": "What is the academic credit structure and library timings?",
+    "answer": "Each undergraduate semester contains 20-22 credits. The central library is open Monday through Saturday from 8:00 AM to 8:00 PM with digital access available 24/7 via the campus intranet.",
+    "source": "Central Library & Academic Dean Bulletin"
+  },
+  {
+    "id": 6,
+    "category": "departments",
+    "keywords": ["departments", "cse", "ece", "mechanical", "civil", "faculty", "డిపార్ట్మెంట్స్", "విభాగాలు", "विभाग"],
+    "question": "Which academic departments exist on campus?",
+    "answer": "Campus departments include Computer Science & Engineering, Electronics & Communication, Electrical & Electronics, Mechanical Engineering, Civil Engineering, and Humanities & Sciences.",
+    "source": "College Information Prospectus 2026"
+  },
+  {
+    "id": 7,
+    "category": "student activities",
+    "keywords": ["clubs", "sports", "student activities", "gym", "music", "robotics", "క్లబ్బులు", "క్రీడలు", "क्लब", "खेलकूद"],
+    "question": "What student clubs and extracurricular activities can I join?",
+    "answer": "Students can participate in various technical and cultural clubs including the Coding Club, Robotics Society, Music & Drama Club, and the Sports Council with full sports complex facilities.",
+    "source": "Directorate of Student Welfare - Student Clubs Guide"
+  }
+]
