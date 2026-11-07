@@ -3,12 +3,43 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --monsoon-ivory: #F3EFE5;
+  --monsoon-ink: #171B1A;
+  --monsoon-forest: #174B43;
+  --monsoon-marigold: #E8B44A;
+  --monsoon-terracotta: #C86F55;
+  --monsoon-sage: #DCE5DB;
+  --monsoon-card: #FFFFFF;
+  --monsoon-grey: #77766F;
+  --monsoon-stone: #DED9CE;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #0a0d17;
-  color: #f1f5f9;
+  background-color: var(--monsoon-ivory);
+  color: var(--monsoon-ink);
+  font-family: 'Manrope', 'Noto Sans Devanagari', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Telugu Typography fine-tuning */
+[lang="te"], .font-telugu {
+  font-family: 'Noto Sans Telugu', 'Manrope', sans-serif;
+  line-height: 1.6;
+}
+
+/* Devanagari Typography fine-tuning */
+[lang="hi"], .font-devanagari {
+  font-family: 'Noto Sans Devanagari', 'Manrope', sans-serif;
+  line-height: 1.6;
+}
+
+/* Custom fine-line editorial details */
+.editorial-border {
+  border: 1px solid var(--monsoon-stone);
+}
+
+.editorial-divider {
+  border-bottom: 1px solid var(--monsoon-stone);
 }

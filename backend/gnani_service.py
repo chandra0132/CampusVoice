@@ -4,8 +4,10 @@ import logging
 import base64
 from typing import Optional, Dict, Any, Tuple
 import httpx
+from pathlib import Path
 from dotenv import load_dotenv
 
+load_dotenv(Path(__file__).resolve().parent / ".env")
 load_dotenv()
 
 logger = logging.getLogger("campusvoice.gnani")

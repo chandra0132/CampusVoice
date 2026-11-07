@@ -125,6 +125,8 @@ class KnowledgeBase:
                     common = content_words.intersection(kw_tokens)
                     if common:
                         score += len(common) * 3
+                    elif any((len(cw) >= 4 and len(kt) >= 4 and (cw in kt or kt in cw)) for cw in content_words for kt in kw_tokens):
+                        score += 3
 
             # 2. Match against questions
             for q_field in ["question", "question_hi", "question_te"]:

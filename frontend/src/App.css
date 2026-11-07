@@ -1,22 +1,28 @@
-/* Custom animations and glow effects for CampusVoice */
-@keyframes pulse-subtle {
+/* Monsoon Editorial Specific Animations */
+@keyframes warm-pulse {
   0%, 100% {
-    opacity: 1;
     transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(232, 180, 74, 0.4);
   }
   50% {
-    opacity: 0.85;
     transform: scale(1.03);
+    box-shadow: 0 0 0 14px rgba(232, 180, 74, 0);
   }
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-warm-pulse {
+  animation: warm-pulse 2.2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-.glass-card {
-  background: rgba(17, 23, 38, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+@keyframes waveform-wave {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-waveform {
+  animation: waveform-wave 1s ease-in-out infinite alternate;
 }

@@ -16,7 +16,7 @@
   {
     "id": 2,
     "category": "attendance",
-    "keywords": ["attendance", "percentage", "shortage", "condonation", "minimum attendance", "attendance requirement", "rules", "హాజరు", "పర్సంటేజ్", "అటెండెన్స్", "కండోనేషన్", "నిబంధనలు", "హాజరు శాతం", "उपस्थिति", "अटेंडेंस", "हाजिरी", "नियम", "न्यूनतम उपस्थिति"],
+    "keywords": ["attendance", "percentage", "shortage", "condonation", "minimum attendance", "attendance requirement", "rules", "attendance rules", "హాజరు", "పర్సంటేజ్", "అటెండెన్స్", "కండోనేషన్", "నిబంధనలు", "నియమాలు", "హాజరు శాతం", "హాజరు నియమాలు", "హాజరు నిబంధనలు", "उपस्थिति", "अटेंडेंस", "हाजिरी", "नियम", "न्यूनतम उपस्थिति"],
     "question": "What is the minimum attendance requirement?",
     "question_hi": "कॉलेज में न्यूनतम उपस्थिति की क्या आवश्यकता है?",
     "question_te": "కాలేజీలో కనీస హాజరు నిబంధన ఏమిటి?",
@@ -30,7 +30,7 @@
   {
     "id": 3,
     "category": "examinations",
-    "keywords": ["examinations", "exam", "hall ticket", "timetable", "mid terms", "end sem", "exam schedule", "పరీక్షలు", "హాల్ టికెట్", "టైంటేబుల్", "ఎగ్జామ్స్", "మిడ్ పరీక్షలు", "షెడ్యూల్", "परीक्षा", "हॉल टिकट", "टाइमटेबल", "एग्जाम", "परीक्षा समय"],
+    "keywords": ["examinations", "exam", "exam rules", "hall ticket", "timetable", "mid terms", "end sem", "exam schedule", "పరీక్షలు", "పరీక్షల", "నియమాలు", "పరీక్షల నియమాలు", "పరీక్షా నియమాలు", "హాల్ టికెట్", "టైంటేబుల్", "ఎగ్జామ్స్", "మిడ్ పరీక్షలు", "షెడ్యూల్", "परीक्षा", "परीक्षा के नियम", "हॉल टिकट", "टाइमटेबल", "एग्जाम", "परीक्षा समय"],
     "question": "When do semester examinations begin and how can I get the hall ticket?",
     "question_hi": "सेमेस्टर परीक्षाएं कब शुरू होती हैं और हॉल टिकट कैसे प्राप्त करें?",
     "question_te": "సెమిస్టర్ పరీక్షలు ఎప్పుడు ప్రారంభమవుతాయి మరియు హాల్ టిక్కెట్ ఎలా పొందాలి?",

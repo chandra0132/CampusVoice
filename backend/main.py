@@ -6,7 +6,11 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException, status
 from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from pathlib import Path
 from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
+load_dotenv()
 
 try:
     from backend.gnani_service import gnani_service, normalize_lang_code
@@ -14,8 +18,6 @@ try:
 except ImportError:
     from gnani_service import gnani_service, normalize_lang_code
     from knowledge import knowledge_base
-
-load_dotenv()
 
 # Setup structured logging
 logging.basicConfig(
@@ -240,6 +242,55 @@ async def ask_question(
         "transcript": transcript,
         "answer": answer,
         "detected_language": detected_language,
+        "source": source,
+        "category": category,
+        "matched": matched,
+        "audio": audio_base64,
+        "has_audio": audio_base64 is not None
+    }
+
+class TextQueryRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=500, description="Question text to query")
+    language: str = Field("en", description="Target language code: te, hi, or en")
+
+@app.post("/api/query", tags=["Assistant"])
+async def query_text(request: TextQueryRequest):
+    """
+    Direct text query workflow for suggested questions:
+    1. Search campus FAQ knowledge base for grounded answer & source.
+    2. Synthesize response audio using Gnani Timbre TTS.
+    3. Return structured answer, source citation, and base64-encoded WAV audio.
+    """
+    lang_clean = request.language.strip().lower()
+    if lang_clean not in ALLOWED_LANGUAGES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported language '{request.language}'. Supported: te, hi, en."
+        )
+
+    # 1. Search Knowledge Base
+    faq_match = knowledge_base.search(request.query, lang_clean)
+    answer = faq_match["answer"]
+    source = faq_match["source"]
+    category = faq_match.get("category")
+    matched = faq_match.get("matched", False)
+
+    # 2. Text-to-Speech via Timbre
+    audio_base64 = None
+    if gnani_service.is_configured():
+        try:
+            synth_bytes = await gnani_service.synthesize(text=answer, language=lang_clean)
+            audio_b64_str = base64.b64encode(synth_bytes).decode("utf-8")
+            audio_base64 = f"data:audio/wav;base64,{audio_b64_str}"
+        except Exception as e:
+            logger.error("Timbre TTS synthesis error in /api/query: %s", str(e))
+            audio_base64 = None
+
+    return {
+        "success": True,
+        "transcript": request.query,
+        "answer": answer,
+        "detected_language": lang_clean,
         "source": source,
         "category": category,
         "matched": matched,
