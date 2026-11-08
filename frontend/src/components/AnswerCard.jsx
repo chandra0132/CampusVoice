@@ -1,8 +1,19 @@
 import React from 'react';
-import { Sparkles, BookOpen, AlertCircle, BookmarkCheck, Info } from 'lucide-react';
+import { Sparkles, AlertCircle, BookmarkCheck, ExternalLink, ShieldCheck, Info } from 'lucide-react';
 import AudioPlayer from './AudioPlayer';
 
-export default function AnswerCard({ answer, source, category, matched, is_sample, audio, language }) {
+export default function AnswerCard({
+  answer,
+  source,
+  source_url,
+  applicable_regulation,
+  category,
+  matched,
+  is_sample,
+  verified = true,
+  audio,
+  language
+}) {
   if (!answer) return null;
 
   const isTelugu = language?.includes('te');
@@ -26,15 +37,26 @@ export default function AnswerCard({ answer, source, category, matched, is_sampl
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {category && (
               <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#DCE5DB] text-[#174B43] border border-[#174B43]/15">
-                {category}
+                {category.replace('_', ' ')}
+              </span>
+            )}
+            {applicable_regulation && (
+              <span className="text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full bg-[#F3EFE5] text-[#171B1A] border border-[#DED9CE]">
+                {applicable_regulation}
+              </span>
+            )}
+            {verified && !isFallback && !isSample && (
+              <span className="text-[11px] font-semibold tracking-wide px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                Verified
               </span>
             )}
             {isSample && (
               <span className="text-[11px] font-semibold tracking-wide px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-300">
-                Sample FAQ Dataset
+                Sample Dataset
               </span>
             )}
             {isFallback && (
@@ -71,8 +93,20 @@ export default function AnswerCard({ answer, source, category, matched, is_sampl
           ) : (
             <BookmarkCheck className="w-4 h-4 text-[#174B43] shrink-0 mt-0.5 sm:mt-0" />
           )}
-          <span className="font-medium text-[#171B1A]">Source:</span>
-          <span className="text-[#77766F] italic">{source || "Campus Information Handbook"}</span>
+          <span className="font-medium text-[#171B1A] shrink-0">Source:</span>
+          {source_url ? (
+            <a
+              href={source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#174B43] hover:text-[#0E352F] hover:underline inline-flex items-center gap-1 italic break-words"
+            >
+              <span>{source || "NBKRIST Official Documentation"}</span>
+              <ExternalLink className="w-3 h-3 shrink-0" />
+            </a>
+          ) : (
+            <span className="text-[#77766F] italic break-words">{source || "NBKRIST Information Handbook"}</span>
+          )}
         </div>
 
         {/* Audio Player */}

@@ -60,8 +60,11 @@ export default function App() {
         transcript: result.transcript,
         answer: result.answer,
         source: result.source,
+        source_url: result.source_url,
+        applicable_regulation: result.applicable_regulation,
         category: result.category,
         is_sample: result.is_sample,
+        verified: result.verified,
         matched: result.matched,
         audio: result.audio,
         language: result.detected_language || selectedLanguage,
@@ -101,8 +104,11 @@ export default function App() {
         transcript: text,
         answer: result.answer,
         source: result.source,
+        source_url: result.source_url,
+        applicable_regulation: result.applicable_regulation,
         category: result.category,
         is_sample: result.is_sample,
+        verified: result.verified,
         matched: result.matched,
         audio: result.audio,
         language: targetLang,
@@ -179,8 +185,11 @@ export default function App() {
             <AnswerCard
               answer={currentInteraction.answer}
               source={currentInteraction.source}
+              source_url={currentInteraction.source_url}
+              applicable_regulation={currentInteraction.applicable_regulation}
               category={currentInteraction.category}
               is_sample={currentInteraction.is_sample}
+              verified={currentInteraction.verified}
               matched={currentInteraction.matched}
               audio={currentInteraction.audio}
               language={currentInteraction.language}

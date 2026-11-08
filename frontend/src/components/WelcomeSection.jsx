@@ -1,24 +1,24 @@
 import React from 'react';
-import { ArrowUpRight, HelpCircle } from 'lucide-react';
+import { ArrowUpRight, HelpCircle, ShieldCheck } from 'lucide-react';
 
 const SUGGESTED_QUESTIONS = [
   {
     lang: 'en',
     label: 'English',
-    text: 'What are the attendance requirements?',
-    category: 'Attendance'
+    text: 'What is the minimum attendance requirement under R-23?',
+    category: 'R-23 Regulations'
   },
   {
     lang: 'hi',
     label: 'हिन्दी',
-    text: 'कॉलेज में परीक्षा के नियम क्या हैं?',
-    category: 'Examinations'
+    text: 'R-23 नियमों के तहत न्यूनतम उपस्थिति कितनी होनी चाहिए?',
+    category: 'R-23 Regulations'
   },
   {
     lang: 'te',
     label: 'తెలుగు',
-    text: 'కాలేజీలో పరీక్షల నియమాలు ఏమిటి?',
-    category: 'Examinations'
+    text: 'R-23 నిబంధనల ప్రకారం కనీస హాజరు ఎంత ఉండాలి?',
+    category: 'R-23 Regulations'
   }
 ];
 
@@ -84,12 +84,12 @@ export default function WelcomeSection({ onSelectQuestion, selectedLanguage }) {
           })}
         </div>
 
-        {/* Sample Data Disclaimer Note */}
-        <p className="text-[11px] text-[#77766F] mt-3 italic">
-          Note: Displays sample college FAQ notices until institution administration datasets are officially verified.
-        </p>
+        {/* Verified Data Note */}
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#77766F] mt-3">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#174B43]" />
+          <span>Grounded in verified NBKRIST institutional sources (R-23 Academic Regulations, Admissions & Fee Circulars).</span>
+        </div>
       </div>
     </section>
   );
 }
-
