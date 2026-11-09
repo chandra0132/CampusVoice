@@ -1,7 +1,17 @@
-# CampusVoice
-> **"Your Campus. Your Language. Your Voice."**
-
-A multilingual, voice-first AI campus assistant designed to eliminate language barriers in higher education institutions, built for the **Great Indian AI Internship Challenge** organized by **Gnani AI** (Submission Target: November 10, 2026).
+<div align="center">
+  <img src="frontend/public/logo.jpg" alt="CampusVoice Logo" width="220" style="border-radius: 28px; box-shadow: 0 8px 30px rgba(23,75,67,0.15);" />
+  <h1 style="margin-top: 16px; margin-bottom: 4px;">CampusVoice</h1>
+  <p><strong><em>"Your Campus. Your Language. Your Voice."</em></strong></p>
+  <p>
+    <a href="https://campus-voice-beryl.vercel.app"><strong>🌐 Live Web Application</strong></a> •
+    <a href="https://campusvoice-t3tc.onrender.com/docs"><strong>⚡ Live Swagger API</strong></a> •
+    <a href="https://campusvoice-t3tc.onrender.com/api/health"><strong>🔍 Backend Health</strong></a> •
+    <a href="https://github.com/chandra0132/CampusVoice"><strong>📦 GitHub Repository</strong></a>
+  </p>
+  <p>
+    <em>A Multilingual Voice-First Campus AI Assistant built for the <strong>Great Indian AI Internship Challenge</strong> by <strong>Gnani AI</strong></em>
+  </p>
+</div>
 
 ---
 

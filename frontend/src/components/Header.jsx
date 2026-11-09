@@ -10,8 +10,12 @@ export default function Header({ selectedLanguage, onLanguageChange, backendStat
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         {/* Brand identity */}
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-[#174B43] flex items-center justify-center text-[#F3EFE5] shadow-sm">
-            <Mic className="w-5 h-5 text-[#E8B44A]" />
+          <div className="w-12 h-12 rounded-2xl bg-white border border-[#DED9CE] p-1 shadow-sm overflow-hidden flex items-center justify-center shrink-0">
+            <img
+              src="/logo.jpg"
+              alt="CampusVoice Logo"
+              className="w-full h-full object-contain rounded-xl"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
